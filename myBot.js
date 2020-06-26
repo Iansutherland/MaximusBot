@@ -26,18 +26,13 @@ client.on('ready', () => {
     const args = message.content.slice(commandPrefix.length).split(/ +/);
     const command = args.shift().toLowerCase();
 
-    if (command === `ping`) {
-        client.commands.get('ping').execute(message, args);
+    if (!client.commands.has(command)) return;
+
+    try {
+        client.commands.get(command).execute(message, args);
+    } catch (error) {
+        console.error(error);
+        message.reply('there was an error trying to execute that command!');
     }
-    else if (command === `server`) {
-        client.commands.get('server').execute(message, args);
-    }
-    else if (command === `whoami`) {
-        client.commands.get('whoami').execute(message, args);
-    }
-    else if (command === 'avatar') {
-        client.commands.get('avatar').execute(message, args);
-    }
-    
 });
 client.login(token);
