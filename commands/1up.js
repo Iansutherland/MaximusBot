@@ -2,7 +2,9 @@ const { MessageAttachment } = require('discord.js');
 
 module.exports = {
     name: '1up',
-    description: 'Give a server homie som Mario flavored Kudos!',
+    description: 'Give a server homie some Mario flavored Kudos!',
+    args: true,
+    useage: "<@mention>",
     execute(message, args){
         const receivingUser = message.mentions.users.first();
         const sendDM = (args[1]) ? args[1].toLowerCase(): null;

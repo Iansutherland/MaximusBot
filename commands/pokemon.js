@@ -3,6 +3,8 @@ const axios = require('axios');
 module.exports = {
     name: "pokemon",
     description: "name a pokemon and get it's pic!",
+    args: true,
+    usage: "<pokemon name>",
     execute(message, args){
         axios.get(`https://pokeapi.co/api/v2/pokemon/${args[0].toLowerCase()}`)
         .then(function (response) {
