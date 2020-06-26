@@ -1,18 +1,22 @@
+const fs = require('fs');
 const Discord = require('discord.js');
 const {commandPrefix} = require('./botConfig.json');
 const {token} = require('./secret.json');
+
 const client = new Discord.Client();
+client.commands = new Discord.Collection();
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+	const command = require(`./commands/${file}`);
+
+	// set a new item in the Collection
+	// with the key as the command name and the value as the exported module
+	client.commands.set(command.name, command);
+}
 
 client.on('ready', () => {
  console.log(`Logged in as ${client.user.tag}!`);
  });
-
- const availableCommands = [
-     {command: `${commandPrefix}help`, description: "See this help prompt"},
-     {command: `${commandPrefix}ping`, description: "See if Maximus (the bot) is around"},
-     {command: `${commandPrefix}server`, description: "Get server deets"},
-     {command: `${commandPrefix}whoami`, description: "You lack sleep and forgot who you are, let Maximus remind you"}
-];
 
  client.on('message', message => {
     console.log(message.author.username + ': ' + message.content);
@@ -23,37 +27,16 @@ client.on('ready', () => {
     const command = args.shift().toLowerCase();
 
     if (command === `ping`) {
-        // send back "Pong." to the channel the message was sent in
-        message.channel.send('Pong.');
+        client.commands.get('ping').execute(message, args);
     }
     else if (command === `server`) {
-        message.channel.send(`This server's name is: ${message.guild.name}\n` + 
-        `Created: ${message.guild.createdAt}\n` +
-        `In Region: ${message.guild.region}`);
+        client.commands.get('server').execute(message, args);
     }
     else if (command === `whoami`) {
-        message.reply(`Your username: ${message.author.username}\nYour ID: ${message.author.id}`);
-    }
-    else if(command === `help`){
-        let helpList = `available commands:\n`
-        for(let i=0; i<availableCommands.length; i++){
-            const {command, description} = availableCommands[i];
-            helpList += (`${command}, ${description}\n`);
-        }
-        message.reply(helpList);
+        client.commands.get('whoami').execute(message, args);
     }
     else if (command === 'avatar') {
-        if (!message.mentions.users.size) {
-            return message.channel.send(`Your avatar: <${message.author.displayAvatarURL({ format: "png", dynamic: true })}>`);
-        }
-    
-        const avatarList = message.mentions.users.map(user => {
-            return `${user.username}'s avatar: <${user.displayAvatarURL({ format: "png", dynamic: true })}>`;
-        });
-    
-        // send the entire array of strings as a message
-        // by default, discord.js will `.join()` the array with `\n`
-        message.channel.send(avatarList);
+        client.commands.get('avatar').execute(message, args);
     }
     
 });
