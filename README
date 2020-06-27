@@ -1,0 +1,7 @@
+A small discord bot using Discord.js
+
+You'll need to ensure you put your key in the secret.json file
+
+DOCKER
+command to start container:
+docker run -it <IMAGE>
