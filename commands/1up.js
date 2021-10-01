@@ -11,7 +11,7 @@ module.exports = {
         let botPost = `${message.author} gave ${receivingUser} a 1up!\n`;
         const attachment = new MessageAttachment('http://wallpoper.com/images/00/05/07/09/1up-mushroom-ii_00050709.jpg');
 
-        if(sendDM === 'DM'){
+        if(sendDM === 'dm'){
             receivingUser.send(botPost, attachment);
         }
         message.channel.send(botPost, attachment);
